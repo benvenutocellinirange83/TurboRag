@@ -1,0 +1,22 @@
+# ── Core ─────────────────────────────────────────────────────────────────────
+numpy>=1.24
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.0
+
+# ── LLM / Embedding (llama.cpp) ───────────────────────────────────────────────
+# CPU-only build (fastest install, works on any x86-64 / ARM64):
+#   pip install llama-cpp-python
+# AVX2 optimized (faster on modern x86):
+#   CMAKE_ARGS="-DLLAMA_AVX2=ON" pip install llama-cpp-python --no-binary :all:
+llama-cpp-python>=0.2.90
+
+# ── MCP Server ────────────────────────────────────────────────────────────────
+fastmcp>=0.9
+
+# ── LangChain integration ─────────────────────────────────────────────────────
+langchain-core>=0.2
+langchain-community>=0.2
+
+# ── ZIM file support (for WikipediaAgent and ZimAgent) ───────────────────────
+# libzim>=3.6.0   # install separately: pip install libzim

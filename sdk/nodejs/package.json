@@ -1,0 +1,15 @@
+{
+  "name": "turborag-sdk",
+  "version": "1.0.0",
+  "description": "Node.js client SDK for the TurboRag REST API",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "license": "MIT",
+  "engines": { "node": ">=18" },
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "node test/basic.js"
+  },
+  "keywords": ["rag", "llm", "vector-search", "offline", "turborag"]
+}
