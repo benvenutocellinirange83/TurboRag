@@ -22,9 +22,9 @@ Vector quantization, a problem rooted in Shannon's source coding theory, aims to
 ## Features
 
 - **No GPU required, no internet at runtime** – everything runs offline on CPU.
-- **Tiny memory footprint** – Gemma Embedding 300M (≈150 MB) + Qwen 0.5B (300 MB).
+- **Tiny memory footprint** – Gemma Embedding 300M (≈300 MB) + Qwen 0.5B (500 MB).
 - **TurboVec Q4 index** – 8× compression, fast brute‑force search.
-- **Optional VLM** – SmolVLM (90‑320 MB) for vision+text tasks.
+- **Optional VLM** – SmolVLM (150‑600 MB) for vision+text tasks.
 - **Built‑in SQLite document store** – metadata and chunk storage.
 - **REST API** – `/index`, `/search`, `/ask` endpoints.
 - **MCP server** – stdio (Claude Desktop) or SSE transport.
